@@ -188,7 +188,5 @@ The analysis was run with the following software and hardware.
 sessionInfo()
 ```
 
-The source code for this document and the analysis is stored in GitHub at: 
-https://github.com/wer61537/Regression_Models_Course_Project.  The R code is at 
-
-The Markdown document is at 
+The source code for this document and the analysis is stored in GitHub at https://github.com/wer61537/Regression_Models_Course_Project.  The R code is at 
+https://github.com/wer61537/Regression_Models_Course_Project/blob/master/regr_transmission_mpg.R.  The Markdown document is at https://github.com/wer61537/Regression_Models_Course_Project/blob/master/regr_transmission_mpg.Rmd.
