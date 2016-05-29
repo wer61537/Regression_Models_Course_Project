@@ -12,20 +12,50 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Executive Summary
 The project goal was to determine if there is a quantifiable effect of transmission type (automatic or manual) on fuel efficiency.  Data from a Motor Trend dataset was explored, highly correlated predictors removed, data tidied and different models investigated. 
 
-There is a relationship between fuel efficiency and transmissiong type, however, that relationship is weak, accounting for only 34% of the variability in fuel efficiency (mpg). Two other models are discussed that have higher adjusted R-squared values.  One model finds the number of cylinders and transmission type account for .  The third model involves more variables (number of cylinders, rear axle ratio, time to cover 1/4 mile, engine type, transmission type and number of forward gears.).  That model accounted for 
+There is a relationship between fuel efficiency and transmissiong type, however, that relationship is weak, accounting for only 34% of the variability in fuel efficiency (mpg). Two other models are discussed that have higher adjusted R-squared values.  One model finds the number of cylinders and transmission type account for .  The third model involves more variables (number of cylinders, rear axle ratio, time to cover 1/4 mile, engine type, transmission type and number of forward gears).  That model accounted for 
 
 All models were evaluated against a record set with highly correlated variables removed.
 
 ## Data Exploration
-The dataset, mtcars (Motor Trend Cars), is from a 1974 Motor Trend US issue.  Fuel efficiency and 10 other vehicle attributes were collected for 32 cars in 1973-1974. Each line of data in the mtcars dataframe represents one model of a car with each column representing one attribute of that car as shown in Table A-1 in the Appendix.
+The dataset, mtcars (Motor Trend Cars), is from a 1974 Motor Trend US issue.  Fuel efficiency and 10 other vehicle attributes were collected for 32 cars in 1973-1974. Each line of data in the mtcars dataframe represents one model of a car with each column representing one attribute of that car as shown in Table 1.
 
-19 of the 32 records are foreign cars (1 Ferrari, 2 Fiats, 1 Honda, 1 Lotus, 1 Maserati, 2 Mazdas, 7 Mercedes, 1 Porsche, 2 Toyotas and 1 Volvo). Figure 1 shows scatter plots of MPG data versus each of the other variables.  There is a fair amount of curvative in the possible response of MPG to different car attributes. The most fuel efficient car is the Toyota Corolla at 33.9 mpg. The least fuel efficient cars are the Cadillac Fleetwood and Lincoln Continental at 10.4 mpg.
+19 of the 32 records are foreign cars (1 Ferrari, 2 Fiats, 1 Honda, 1 Lotus, 1 Maserati, 2 Mazdas, 7 Mercedes, 1 Porsche, 2 Toyotas and 1 Volvo). Figure 1 shows scatter plots of MPG data versus each of the other variables.  There is a fair amount of curvative in the possible response of fuel efficiency to different car attributes. The most fuel efficient car is the Toyota Corolla at 33.9 mpg. The least fuel efficient cars are the Cadillac Fleetwood and Lincoln Continental at 10.4 mpg.
 
+#### Table 1: MTCars Data Elements
+<table border = "1" cellpadding="20" style="padding-right: 40px;">
+<tr><th align="left">Variable</th><th align="left">Data Type</th><th align="left">Description</th><th align="left">Levels</th></tr>
+<tr><td>Model</td><td>character</td><td>Brand and model</td><td>%nbsp;</td></tr>
+<tr><td>MPG</td><td>number</td><td>Miles/(US) gallon</td><td>Continuous</td></tr>
+<tr><td>cyl</td><td>number</td><td>Number of cylinders</td><td>4, 6, 8</td></tr>
+<tr><td>disp</td><td>number</td><td>Displacement (cu.in.)</td><td>Continuous</td></tr>
+<tr><td>hp</td><td>number</td><td>Gross horsepower</td><td>52,62,65,66,91,93,95,97,105,109,110,113,123,150,175,180,205,215,230,245,264,335</td></tr>
+<tr><td>drat</td><td>number</td><td>Rear axle ratio</td><td>Continuous</td></tr>
+<tr><td>wt</td><td>number</td><td>Weight (lb/1000)</td><td>Continuous</td></tr>
+<tr><td>qsec</td><td>number</td><td>1/4 mile time</td><td>Continuous</td></tr>
+<tr><td>vs</td><td>number</td><td>Engine type</td><td>0 = vee engine, 1 = straight or inline engine</td></tr>
+<tr><td>am</td><td>number</td><td>Transmission type</td><td>0 = automatic, 1 = manual</td></tr>
+<tr><td>gear</td><td>number</td><td>Number of forward gears</td><td>3, 4, 5</td></tr>
+<tr><td>carb</td><td>number</td><td>Number of carburetors</td><td>1, 2, 3, 4, 6, 8</td></tr>
+</table>
 
 ## Tidying Data
 Since the question is about the effect of transmission type on fuel efficiency, the transmission type variable (AM) was recoded as 0 = Automatic and 1 = Manual. The variables Transmission Type (am), Number of Cylinders (cyl), Engine Type(vs) and Number of Forward Gears (gear), while numeric, are categorical and were converted to factors.  All other variables were not altered.  Variable names, while not memorable, were left as abbreviations.
 
-Highly correlated predictors lead to regression coefficients that depend on other included predictors, standard errors increase which leads to wider confidence interval and less precise slope estimates and marginal model improvement due to an added variable depends on other variables in the model. The findCorrelation function in the caret package was used to evaluate a correlation matrix (Table A-2) of the numerical variables.  Gross HorsePower (hp), Displacement (disp), Weight (wt) and Number of Carburetors (carb).  The reduced data frame includes the following data elements: model, Miles Per Gallon (mpg), Number of Cylinders (cyl), Rear Axle Ratio (drat), Quarter Mile Time (qsec), Engine Type (vs), Transmission Type (am) and Number of Gears gear).
+Highly correlated predictors lead to regression coefficients that depend on other included predictors, standard errors increase which leads to wider confidence interval and less precise slope estimates and marginal model improvement due to an added variable depends on other variables in the model. The findCorrelation function in the caret package was used to evaluate a correlation matrix (Table 2) of the numerical variables.  
+
+#### Table 2: Correlation Matrix for MTCars Variables.  Variables with values > 0.6 were removed.
+<table border =1 cellpadding="10">
+<tr> <th>  </th> <th> disp </th> <th> hp </th> <th> drat </th> <th> wt </th> <th> qsec </th> <th> carb </th>  </tr>
+<tr> <td align="right"> disp </td> <td align="right"> 1.00 </td> <td align="right">  </td> <td align="right"> </td> <td align="right">  </td> <td align="right">  </td> <td align="right">  </td> </tr>
+<tr> <td align="right"> hp </td> <td align="right"> 0.79 </td> <td align="right"> 1.00 </td> <td align="right">   </td> <td align="right">   </td> <td align="right">   </td> <td align="right">   </td> </tr>
+<tr> <td align="right"> drat </td> <td align="right"> -0.71 </td> <td align="right"> -0.45 </td> <td align="right"> 1.00 </td> <td align="right">  </td> <td align="right">   </td> <td align="right">   </td> </tr>
+<tr> <td align="right"> wt </td> <td align="right"> 0.89 </td> <td align="right"> 0.66 </td> <td align="right"> -0.71 </td> <td align="right"> 1.00 </td> <td align="right">  </td> <td align="right">  </td> </tr>
+<tr> <td align="right"> qsec </td> <td align="right"> -0.43 </td> <td align="right"> -0.71 </td> <td align="right"> 0.09 </td> <td align="right"> -0.17 </td> <td align="right"> 1.00 </td> <td align="right">   </td> </tr>
+<tr> <td align="right"> carb </td> <td align="right"> 0.39 </td> <td align="right"> 0.75 </td> <td align="right"> -0.09 </td> <td align="right"> 0.43 </td> <td align="right"> -0.66 </td> <td align="right"> 1.00 </td> </tr>
+</table>
+
+Gross HorsePower (hp), Displacement (disp), Weight (wt) and Number of Carburetors (carb).  The reduced data frame includes the following data elements: model, Miles Per Gallon (mpg), Number of Cylinders (cyl), Rear Axle Ratio (drat), Quarter Mile Time (qsec), Engine Type (vs), Transmission Type (am) and Number of Gears gear).
+
 
 ## Analysis
 Two preliminary linear models Transmission Type only (MPG ~ AM) and all remaining variables (MPG ~ .) were constructed. The simplest model, MPG ~ AM, has each term as significant but an adjusted R-squared of 0.3385.  The more complicated model (MPG ~ .), that includes all remaining variables has an adjuste R-squared of 0.7026 but no term is very significant.
@@ -36,7 +66,7 @@ The resulting models were then diagnostically evaluated for multicollinearity (V
 
 The models tested are shown in the following table.
 
-#### Table 1: Models evaluated.
+#### Table 3: Models evaluated.
 <table border ="1">
 <tr><th>Model</th><th>Adj. R-Squared</th><th>Formula</th><tr>
 <tr><td>stepBack</td><td>0.7399</td><td>mpg ~ cyl + am</td><tr>
@@ -63,7 +93,7 @@ The following sections compare the three models.  The LL and UL columns indicate
 ### Simple Model (mpg ~ am)
 The following table shows the regression results for fuel efficiency effects due to transmission type.
 
-#### Table 2: Simple Model of mpg vs am
+#### Table 4: Simple Model of mpg vs am
 <table border =1>
 <tr><th></td><th>Estimate</th><th>Std. Error</th><th align="center">LL</th><th  align="center">UL</th><th>t value </th><th>Pr(>|t|)</th><th></th></tr>
 <tr><td>Intercept)</td><td>17.15</td><td>1.13</td><td>14.85</td><td>19.44</td><td>15.25</td><td>1.13E-15</td><td>***<td></tr>
@@ -77,7 +107,7 @@ The coefficient for manual transmission (am1), shows that fuel efficiency is 7.2
 ### Highest Adjusted R-Squared Model (mpg ~ cyl + am)
 The following table shows the regression results for fuel efficiency effects due to the number of cylinders and transmission type.
 
-#### Table 3: Model with two terms (mpg ~ cyl + am)
+#### Table 5: Model with two terms (mpg ~ cyl + am)
 <table border =1>
 <tr><th></td><th>Estimate</th><th>Std. Error</th><th align="center">LL</th><th  align="center">UL</th><th>t value </th><th>Pr(>|t|)</th><th></th></tr>
 <tr><td>(Intercept)</td><td>24.80</td><td>1.32</td><td>22.09</td><td>27.51</td><td>18.75</td><td>&lt; 2.00E-16</td><td>***</td></tr>
@@ -92,7 +122,7 @@ Three variations of step wise regression found this model with an adjusted R-Squ
 This model is included in the results since it was the starting model for step wise regression and had an adjusted R-squared of 0.7026.  Unlike the previous model, no variable was considered significant.  Increasing the number of cylinders and forward gears descreases fuel efficiency (), drat increases MPG by 1.4201, qsec just a little bit 0.3208 while engine type (straight vs VB) increases mileage by 1.58 MPG and manual transmission (am1) by 4.65 MPG.
 
 
-#### Table 4: Complex Model ( mpg ~ cyl + drat + qsec + vs + am + gear)
+#### Table 6: Complex Model ( mpg ~ cyl + drat + qsec + vs + am + gear)
 <table border =1>
 <tr><th></th><th>Estimate</th><th>Std. Error</th><th align="center">LL</th><th  align="center">UL</th>&nbsp;&nbsp;&nbsp;<th>t value </th><th>Pr(>|t|)</th><th></th></tr>
 <tr><td>(Intercept)</td><td>11.99</td><td>21.35</td><td>-32.17</td><td>56.15</td><td>0.56</td><td>0.5797</td><td>&nbsp;</td><tr>
@@ -119,24 +149,6 @@ In this data set vehicles achieve a fuel effiency of 7.2 miles per gallon more t
 
 ## Appendix
 
-
-#### Table A-1: MTCars Data Elements
-<table border = "1" cellpadding="20" style="padding-right: 40px;">
-<tr><th align="left">Variable</th><th align="left">Data Type</th><th align="left">Description</th><th align="left">Levels</th></tr>
-<tr><td>Model</td><td>character</td><td>Brand and model</td><td>%nbsp;</td></tr>
-<tr><td>MPG</td><td>number</td><td>Miles/(US) gallon</td><td>Continuous</td></tr>
-<tr><td>cyl</td><td>number</td><td>Number of cylinders</td><td>4, 6, 8</td></tr>
-<tr><td>disp</td><td>number</td><td>Displacement (cu.in.)</td><td>Continuous</td></tr>
-<tr><td>hp</td><td>number</td><td>Gross horsepower</td><td>52,62,65,66,91,93,95,97,105,109,110,113,123,150,175,180,205,215,230,245,264,335</td></tr>
-<tr><td>drat</td><td>number</td><td>Rear axle ratio</td><td>Continuous</td></tr>
-<tr><td>wt</td><td>number</td><td>Weight (lb/1000)</td><td>Continuous</td></tr>
-<tr><td>qsec</td><td>number</td><td>1/4 mile time</td><td>Continuous</td></tr>
-<tr><td>vs</td><td>number</td><td>Engine type</td><td>0 = vee engine, 1 = straight or inline engine</td></tr>
-<tr><td>am</td><td>number</td><td>Transmission type</td><td>0 = automatic, 1 = manual</td></tr>
-<tr><td>gear</td><td>number</td><td>Number of forward gears</td><td>3, 4, 5</td></tr>
-<tr><td>carb</td><td>number</td><td>Number of carburetors</td><td>1, 2, 3, 4, 6, 8</td></tr>
-</table>
-
 #### Figures A1-A10:  MPG vs Attributes.  Automatic Transmission data are colored pink, while manual transmission data are colored teal.  
 <table>
 <tr><td align="center">MPG vs Displacement</td><td align="center">MPG vs Gross Horsepower</td><td align="center">MPG vs Rear Axle Ratio</td><tr>
@@ -160,18 +172,6 @@ In this data set vehicles achieve a fuel effiency of 7.2 miles per gallon more t
 <tr><td>&nbsp;</td><td align="center">MPG vs Number of Carburetors</td><td>&nbsp;</td><tr>
 <tr><td>&nbsp;</td><td>![Figure 9](images/mpg_carb.png)</td><td>&nbsp;</td><tr>
 </table>
-
-#### Table A-2: Correlation Matrix for MTCars Variables.  Variables with values > 0.6 were removed.
-<table border =1 cellpadding="10">
-<tr> <th>  </th> <th> disp </th> <th> hp </th> <th> drat </th> <th> wt </th> <th> qsec </th> <th> carb </th>  </tr>
-<tr> <td align="right"> disp </td> <td align="right"> 1.00 </td> <td align="right">  </td> <td align="right"> </td> <td align="right">  </td> <td align="right">  </td> <td align="right">  </td> </tr>
-<tr> <td align="right"> hp </td> <td align="right"> 0.79 </td> <td align="right"> 1.00 </td> <td align="right">   </td> <td align="right">   </td> <td align="right">   </td> <td align="right">   </td> </tr>
-<tr> <td align="right"> drat </td> <td align="right"> -0.71 </td> <td align="right"> -0.45 </td> <td align="right"> 1.00 </td> <td align="right">  </td> <td align="right">   </td> <td align="right">   </td> </tr>
-<tr> <td align="right"> wt </td> <td align="right"> 0.89 </td> <td align="right"> 0.66 </td> <td align="right"> -0.71 </td> <td align="right"> 1.00 </td> <td align="right">  </td> <td align="right">  </td> </tr>
-<tr> <td align="right"> qsec </td> <td align="right"> -0.43 </td> <td align="right"> -0.71 </td> <td align="right"> 0.09 </td> <td align="right"> -0.17 </td> <td align="right"> 1.00 </td> <td align="right">   </td> </tr>
-<tr> <td align="right"> carb </td> <td align="right"> 0.39 </td> <td align="right"> 0.75 </td> <td align="right"> -0.09 </td> <td align="right"> 0.43 </td> <td align="right"> -0.66 </td> <td align="right"> 1.00 </td> </tr>
-</table>
-
 
 
 #### Figures A11-A13:  Distribution of Studentized Residuals for Three Models.  

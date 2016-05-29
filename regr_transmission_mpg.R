@@ -155,6 +155,14 @@ anova(model.int ,stepBIC, stepBack)
 #================================
 #  Step wise evaluations of fit
 #================================
+summary(fit.am.r)
+confint(fit.am.r,level=0.95)
+
+summary(fit.all.r)
+confint(fit.all.r,level=0.95)
+
+summary(stepBIC)
+confint(stepBIC,level=0.95)
 
 #checks on the different models
 #================================
