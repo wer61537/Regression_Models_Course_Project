@@ -111,13 +111,13 @@ fit.all.r<- lm(mpg~.,data=mtcars2)
 
 #detail about mpg~am
 summary(fit.am.r)  #0.3385
-
+print(xtable(summary(fit.am.r)  ), type = "html")
 #detail about mpg~.
 #verify no multicorrelatity
 sqrt(vif(fit.all.r))>2  #all are false which is good
 
 summary(fit.all.r)  #7026
-
+print(xtable(summary(fit.all.r)  ), type = "html")
 #================================
 #  Initial model
 #================================
@@ -142,6 +142,7 @@ summary(stepFor) #.7026
 n = dim(mtcars2)[1]
 stepBIC = stepAIC(fit.all.r,k=log(n))
 summary(stepBIC)  #0.7399
+print(xtable(summary(stepBIC)  ), type = "html")
 #anova(fit.all.r,fit.am.r,stepBoth, stepBIC,stepBack,stepFor)
 
 model.int <- lm(mpg ~ cyl * am, data=mtcars2)
